@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { Draggable, Droppable } from 'react-beautiful-dnd';
 
-const Card = () => {
+const Card = ({ tasks, loading, toggle, setToggle }) => {
     const [title, setTitle] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
     const [calculate, setCalculate] = useState(null);
-    const [cardData, setCardData] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [toggle, setToggle] = useState(true);
-
-    console.log(cardData);
 
     // File read
     if (selectedFile) {
@@ -22,7 +18,7 @@ const Card = () => {
     const handleForm = (e) => {
         e.preventDefault();
 
-        // File validation
+        // File check
         if (selectedFile && selectedFile.type === "text/plain") {
             let myData = {
                 title,
@@ -51,34 +47,42 @@ const Card = () => {
         document.getElementById("formFile").value = "";
     }
 
-    useEffect(() => {
-        setLoading(true);
-        fetch('http://localhost:5000/data')
-            .then(res => res.json())
-            .then(data => setCardData(data))
-            .finally(() => {
-                setLoading(false)
-            })
-    }, [toggle]);
-
     return (
         <div className="max-w-screen-lg mx-auto mt-20">
             <div className="max-w-md p-4 border border-gray-300">
                 {loading ?
-                    <p className='mb-2 text-xl text-green-600'>Loading...</p>
+                    <p className='mb-2 text-lg text-green-600'>Loading...</p>
                     :
                     <div className="mb-10">
-                        <h2 className="text-2xl mb-3">Total Results: {cardData.length}</h2>
-                        {
-                            cardData.map(data => <div className="border border-gray-300 rounded p-2 px-2 mb-2">
-                                <div key={data._id} className="flex justify-between">
-                                    <div className="text-lg">= {data.calculate}</div>
-                                    <div className="text-lg">{data.title}</div>
-                                    <div><button className="rounded bg-gray-600 hover:bg-gray-500 text-white py-1 px-3">See Input</button></div>
+                        <h2 className="text-2xl mb-3">Total Results: {tasks.length}</h2>
+                        <Droppable droppableId="droppable-1">
+                            {(provided) => (
+                                <div
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                >
+                                    {tasks.map((task, index) =>
+                                        <Draggable key={task._id} draggableId={task._id} index={index}>
+                                            {(provided) => (
+                                                <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                >
+                                                    <div className="border border-gray-300 bg-white rounded p-2 px-2 mb-3">
+                                                        <div className="flex justify-between">
+                                                            <div className="text-lg">= {task.calculate}</div>
+                                                            <div className="text-lg">{task.title}</div>
+                                                            <div><button className="rounded bg-gray-600 hover:bg-gray-500 text-white py-1 px-3">See Input</button></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </Draggable>)}
+                                    {provided.placeholder}
                                 </div>
-                            </div>
-                            )
-                        }
+                            )}
+                        </Droppable>
                     </div>
                 }
                 <div>
