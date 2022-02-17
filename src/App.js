@@ -1,14 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
-import Card from './components/Card/Card';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';
+import CardA from './components/CardA/CardA';
+import CardB from './components/CardB/CardB';
 
 function App() {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [toggle, setToggle] = useState(true);
 
+  // Data fetch
   useEffect(() => {
     setLoading(true);
     fetch('http://localhost:5000/data')
@@ -19,6 +21,7 @@ function App() {
       })
   }, [toggle]);
 
+  // Handler onDragEnd
   function handleOnDragEnd(result) {
     if (!result.destination) {
       return;
@@ -32,9 +35,10 @@ function App() {
   }
 
   return (
-    <div>
+    <div className="max-w-screen-lg mx-auto mt-20 grid grid-cols-2">
       <DragDropContext onDragEnd={handleOnDragEnd}>
-        <Card tasks={tasks} loading={loading} toggle={toggle} setToggle={setToggle}></Card>
+        <CardA tasks={tasks} loading={loading} toggle={toggle} setToggle={setToggle}></CardA>
+        <CardB tasks={tasks} loading={loading} toggle={toggle}></CardB>
       </DragDropContext>
     </div>
   );
