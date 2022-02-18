@@ -29,7 +29,7 @@ const CardB = ({ tasks, loading, toggle }) => {
                                                         <div className="flex justify-between">
                                                             <div className="text-lg">= {task.calculate}</div>
                                                             <div className="text-lg">{task.title}</div>
-                                                            <div><button className="rounded bg-gray-600 hover:bg-gray-500 text-white py-1 px-3">See Input</button></div>
+                                                            <div><button onClick={() => alert(`${task.filePath}`)} className="rounded bg-gray-600 hover:bg-gray-500 text-white py-1 px-3">See Input</button></div>
                                                         </div>
                                                     </div>
                                                 </div>

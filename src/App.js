@@ -1,4 +1,3 @@
-import logo from './logo.svg';
 import './App.css';
 import { DragDropContext } from 'react-beautiful-dnd';
 import { useEffect, useState } from 'react';

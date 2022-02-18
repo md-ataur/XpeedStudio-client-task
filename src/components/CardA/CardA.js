@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Draggable, Droppable } from 'react-beautiful-dnd';
 
@@ -40,17 +41,22 @@ const CardA = ({ tasks, loading, toggle, setToggle }) => {
                     calculate
                 }
 
-                // Data send to DB
-                fetch('http://localhost:5000/data', {
-                    method: 'POST',
+                const data = new FormData();
+                data.append('file', selectedFile);
+                data.append('data', JSON.stringify(myData));
+
+                axios({
+                    method: 'post',
+                    url: 'http://localhost:5000/data',
+                    data: data,
                     headers: {
-                        'content-type': 'application/json'
-                    },
-                    body: JSON.stringify(myData)
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data',
+                    }
                 })
-                    .then((res) => {
-                        console.log('Data successfully Inserted');
-                    })
+                    .then(res => {
+                        console.log(res.data);
+                    });
 
                 setToggle(!toggle);
             }
@@ -62,6 +68,7 @@ const CardA = ({ tasks, loading, toggle, setToggle }) => {
         // Fields clear
         document.getElementById("title").value = "";
         document.getElementById("formFile").value = "";
+        setSelectedFile("");
     }
 
     return (
@@ -91,7 +98,7 @@ const CardA = ({ tasks, loading, toggle, setToggle }) => {
                                                         <div className="flex justify-between">
                                                             <div className="text-lg">= {task.calculate}</div>
                                                             <div className="text-lg">{task.title}</div>
-                                                            <div><button className="rounded bg-gray-600 hover:bg-gray-500 text-white py-1 px-3">See Input</button></div>
+                                                            <div><button onClick={() => alert(`${task.filePath}`)} className="rounded bg-gray-600 hover:bg-gray-500 text-white py-1 px-3">See Input</button></div>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -105,7 +112,7 @@ const CardA = ({ tasks, loading, toggle, setToggle }) => {
                 }
                 <div>
                     <h2 className="text-2xl mb-3">Input</h2>
-                    <form onSubmit={handleForm} action="">
+                    <form onSubmit={handleForm} action="" encType="multipart/form-data">
                         <div className="mb-3">
                             <input onBlur={(e) => setTitle(e.target.value)} type="text" id="title" className="w-96 border border-solid border-gray-300 px-2 py-1.5 rounded transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" placeholder="Calculation Title" required />
                         </div>
