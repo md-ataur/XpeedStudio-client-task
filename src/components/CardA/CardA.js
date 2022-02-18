@@ -5,14 +5,14 @@ import { Draggable, Droppable } from 'react-beautiful-dnd';
 const CardA = ({ tasks, loading, toggle, setToggle }) => {
     const [title, setTitle] = useState("");
     const [selectedFile, setSelectedFile] = useState(null);
-    const [calculate, setCalculate] = useState(null);
+    const [number, setNumber] = useState(null);
     const [message, setMessage] = useState('');
 
     // File read
     if (selectedFile) {
         selectedFile.text()
             .then((digits) => {
-                setCalculate(eval(digits));
+                setNumber(eval(digits));
             })
     }
 
@@ -38,7 +38,7 @@ const CardA = ({ tasks, loading, toggle, setToggle }) => {
             const calculation = () => {
                 let myData = {
                     title,
-                    calculate
+                    number
                 }
 
                 const data = new FormData();
@@ -47,7 +47,7 @@ const CardA = ({ tasks, loading, toggle, setToggle }) => {
 
                 axios({
                     method: 'post',
-                    url: 'http://localhost:5000/data',
+                    url: 'https://warm-lowlands-13918.herokuapp.com/data',
                     data: data,
                     headers: {
                         'Accept': 'application/json',
@@ -70,6 +70,7 @@ const CardA = ({ tasks, loading, toggle, setToggle }) => {
         document.getElementById("formFile").value = "";
         setSelectedFile("");
     }
+
 
     return (
         <div>
@@ -96,7 +97,7 @@ const CardA = ({ tasks, loading, toggle, setToggle }) => {
                                                 >
                                                     <div className="border border-gray-300 bg-white rounded p-2 px-2">
                                                         <div className="flex justify-between">
-                                                            <div className="text-lg">= {task.calculate}</div>
+                                                            <div className="text-lg">= {task.number}</div>
                                                             <div className="text-lg">{task.title}</div>
                                                             <div><button onClick={() => alert(`${task.filePath}`)} className="rounded bg-gray-600 hover:bg-gray-500 text-white py-1 px-3">See Input</button></div>
                                                         </div>

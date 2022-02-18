@@ -12,7 +12,7 @@ function App() {
   // Data fetch
   useEffect(() => {
     setLoading(true);
-    fetch('http://localhost:5000/data')
+    fetch('https://warm-lowlands-13918.herokuapp.com/data')
       .then(res => res.json())
       .then(data => setTasks(data))
       .finally(() => {
@@ -29,7 +29,6 @@ function App() {
     const items = Array.from(tasks);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
-
     setTasks(items);
   }
 
